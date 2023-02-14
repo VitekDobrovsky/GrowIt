@@ -1,0 +1,3 @@
+WIDTH, HEIGHT = 800, 650
+FPS = 60
+BG_COLOR = '#ffbf66'
