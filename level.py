@@ -23,21 +23,16 @@ class Level:
             #spawn
         self.canSpawn = True
         self.spawnTimer = None
-        self.spawnCooldown = 1000
+        self.spawnCooldown = 10000
 
     def spawnEnemy(self):
         if self.canSpawn:
-            Enemy((randint(0, 750), randint(0,600)), [self.visibleSprites, self.enemies])
+            Enemy((randint(0, 750), randint(0,600)), [self.enemies])
             self.spawnTimer = pygame.time.get_ticks()
             self.canSpawn = False
         
         value = self.cooldown(self.current_time, self.canSpawn, self.spawnTimer, self.spawnCooldown)      
         self.canSpawn = value
-
-    def killEnemy(self):
-        for enemy in self.enemies:
-            if self.player.rect.colliderect(enemy.rect):
-                enemy.kill()
 
     def cooldown(self, current, var, varTime, cooldown):
         if not var:
@@ -52,7 +47,8 @@ class Level:
         
         # enemies
         self.spawnEnemy()
-        self.killEnemy()
+        for enemy in self.enemies:
+            enemy.checkDeath(self.player)
         
         # draw map
         self.screen.blit(self.map, self.mapRect)
@@ -60,3 +56,6 @@ class Level:
         # update sprites
         self.visibleSprites.draw(self.screen)
         self.visibleSprites.update()
+        # update enemies
+        self.enemies.draw(self.screen)
+        self.enemies.update(self.player)
